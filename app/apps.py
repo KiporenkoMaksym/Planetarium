@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class PlanetariumApiConfig(AppConfig):
-    name = "planetarium_api"
+    name = "app"
