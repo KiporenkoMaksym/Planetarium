@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from app.models import ShowTheme, AstronomyShow, ShowSession, PlanetariumDome, Reservation, Ticket
 
@@ -34,13 +35,16 @@ class PlanetariumDomeSerializer(serializers.ModelSerializer):
 
 
 class ShowSessionSerializer(serializers.ModelSerializer):
+    tickets_available = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = ShowSession
         fields = (
             "id",
             "astronomy_show",
             "planetarium_dome",
-            "show_time"
+            "show_time",
+            "tickets_available"
         )
 
 
@@ -80,6 +84,17 @@ class ReservationSerializer(serializers.ModelSerializer):
 
 
 class TicketSerializer(serializers.ModelSerializer):
+
+    def validate(self, attrs):
+        data = super(TicketSerializer, self).validate(attrs=attrs)
+        Ticket.validate_ticket(
+            attrs["row"],
+            attrs["seat"],
+            attrs["show_session"].planetarium_dome,
+            ValidationError
+        )
+        return data
+
     class Meta:
         model = Ticket
         fields = (

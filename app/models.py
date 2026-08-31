@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -53,7 +54,7 @@ class ShowSession(models.Model):
     planetarium_dome = models.ForeignKey(
         PlanetariumDome,
         on_delete=models.CASCADE,
-        related_name="show_session"
+        related_name="show_sessions"
     )
     show_time = models.DateTimeField()
 
@@ -93,8 +94,45 @@ class Ticket(models.Model):
         related_name="tickets"
     )
 
+    @staticmethod
+    def validate_ticket(row, seat, planetarium_dome, errors_to_raise):
+        for ticket_attr_value, ticket_attr_name, planetarium_dome_attr_name in [
+            (row, "row", "rows"),
+            (seat, "seat", "seats_in_rows")
+        ]:
+            count_attrs = getattr(planetarium_dome, planetarium_dome_attr_name)
+            if not(1 <= ticket_attr_value <= count_attrs):
+                raise errors_to_raise(
+                    {
+                        ticket_attr_name: f"{ticket_attr_name}"
+                                          f"number must be in available range:"
+                                          f" 1, {count_attrs}"
+                    }
+                )
+
+    def clean(self):
+        Ticket.validate_ticket(
+            self.row,
+            self.seat,
+            self.show_session.planetarium_dome,
+            ValidationError
+        )
+
+    def save(
+            self,
+            force_insert=False,
+            force_update=False,
+            using=None,
+            update_fields=None,
+    ):
+        self.full_clean()
+        return super(Ticket, self).save(
+            force_insert, force_update, using, update_fields
+        )
+
     class Meta:
         ordering = ["row", "seat"]
+        unique_together = (("row", "seat", "show_session"),)
 
     def __str__(self):
         return (f"Ticket: row {self.row}, seat {self.seat}"
