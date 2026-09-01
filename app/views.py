@@ -91,7 +91,8 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
             show_time = self.request.query_params.get("show_time")
             astronomy_show_id = self.request.query_params.get("astronomy_show")
 
-            queryset = self.queryset
+            queryset = super().get_queryset()
+
             if show_time:
                 show_time = datetime.strptime(show_time, "%Y-%m-%d").date()
                 queryset = queryset.filter(show_time__date=show_time)
@@ -99,7 +100,7 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
             if astronomy_show_id:
                 queryset = queryset.filter(astronomy_show_id=int(astronomy_show_id))
 
-            return queryset
+            return queryset.distinct()
 
     def get_serializer_class(self):
 
