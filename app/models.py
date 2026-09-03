@@ -1,6 +1,10 @@
+import pathlib
+import uuid
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils.text import slugify
 
 
 class ShowTheme(models.Model):
@@ -13,6 +17,12 @@ class ShowTheme(models.Model):
         return self.name
 
 
+def show_image_path(instance: "AstronomyShow", filename):
+    filename = (f"{slugify(instance.title)}-{uuid.uuid4()}"
+                + pathlib.Path(filename).suffix)
+    return pathlib.Path("upload-image/") / pathlib.Path(filename)
+
+
 class AstronomyShow(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
@@ -21,6 +31,7 @@ class AstronomyShow(models.Model):
         blank=True,
         related_name="astronomy_shows"
     )
+    image = models.ImageField(upload_to=show_image_path, null=True, blank=True)
 
     class Meta:
         ordering = ["title"]
@@ -120,15 +131,11 @@ class Ticket(models.Model):
 
     def save(
             self,
-            force_insert=False,
-            force_update=False,
-            using=None,
-            update_fields=None,
+            *args,
+            **kwargs
     ):
         self.full_clean()
-        return super(Ticket, self).save(
-            force_insert, force_update, using, update_fields
-        )
+        return super(Ticket, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ["row", "seat"]
