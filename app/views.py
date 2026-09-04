@@ -49,6 +49,8 @@ class AstronomyShowViewSet(
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
     mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
     viewsets.GenericViewSet
 ):
     queryset = AstronomyShow.objects.all()
