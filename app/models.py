@@ -73,7 +73,8 @@ class ShowSession(models.Model):
         ordering = ["-show_time"]
 
     def __str__(self):
-        return f"{self.astronomy_show.title} - {self.planetarium_dome.name}"
+        return (f"{self.astronomy_show.title} -"
+                f"{self.planetarium_dome.name}")
 
 
 class Reservation(models.Model):
