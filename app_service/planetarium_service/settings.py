@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "app",
     "debug_toolbar",
     "user",
+    "core",
     "drf_spectacular",
     "rest_framework_simplejwt",
 ]
@@ -62,7 +63,7 @@ MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
-ROOT_URLCONF = "planetarium_service.urls"
+ROOT_URLCONF = "app_service.planetarium_service.urls"
 
 TEMPLATES = [
     {
@@ -87,8 +88,12 @@ WSGI_APPLICATION = "planetarium_service.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB"),
+        "USER": os.getenv("POSTGRES_USER"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+        "HOST": os.getenv("POSTGRES_HOST"),
+        "PORT": os.getenv("POSTGRES_PORT"),
     }
 }
 
