@@ -63,7 +63,7 @@ MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
-ROOT_URLCONF = "app_service.planetarium_service.urls"
+ROOT_URLCONF = "planetarium_service.urls"
 
 TEMPLATES = [
     {

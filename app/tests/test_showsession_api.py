@@ -151,13 +151,21 @@ class AdminShowSessionApiTest(TestCase):
         )
 
     def test_put_show_session(self):
-        show_session = sample_show_session()
+        astronomy_show = sample_astronomy_show()
+        planetarium_dome = sample_planetarium_dome()
 
-        astronomy_show = AstronomyShow.objects.get(pk=1)
-        planetarium_dome = PlanetariumDome.objects.get(pk=1)
+        show_session = sample_show_session(
+            astronomy_show=astronomy_show,
+            planetarium_dome=planetarium_dome,
+        )
+
+        new_astronomy_show = sample_astronomy_show(
+            title="New Astronomy Show",
+            description="Black holes are the not most massive objects in the universe",
+        )
 
         payload = {
-            "astronomy_show": astronomy_show.id,
+            "astronomy_show": new_astronomy_show.id,
             "planetarium_dome": planetarium_dome.id,
             "show_time": datetime.datetime(
                 year=2026,
@@ -169,10 +177,14 @@ class AdminShowSessionApiTest(TestCase):
         url = detail_url(show_session.id)
         res = self.client.put(url, payload)
 
+        show_session.refresh_from_db()
+
         self.assertEqual(
             res.status_code,
             status.HTTP_200_OK
         )
+        self.assertEqual(show_session.astronomy_show, new_astronomy_show)
+        self.assertEqual(show_session.planetarium_dome, planetarium_dome)
 
     def test_delete_show_session(self):
         show_session = sample_show_session()
