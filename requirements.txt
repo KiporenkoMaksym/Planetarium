@@ -4,7 +4,7 @@ attrs==26.1.0
 black==26.5.1
 certifi==2026.7.22
 click==8.5.0
-Django==6.0.3
+Django==6.1
 django-debug-toolbar==7.1.1
 django-stubs==6.1.0
 django-stubs-ext==6.1.0
@@ -23,6 +23,8 @@ packaging==26.3
 pathspec==1.1.1
 pillow==12.3.0
 platformdirs==4.11.5
+psycopg==3.3.5
+psycopg-binary==3.3.5
 pycodestyle==2.14.0
 pyflakes==3.4.0
 PyJWT==2.13.0
@@ -37,4 +39,3 @@ typing_extensions==4.16.0
 tzdata==2026.3
 uritemplate==4.2.0
 urllib3==2.7.0
-psycopg2-binary
