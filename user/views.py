@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.settings import api_settings
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -19,12 +18,6 @@ class CreateUserSerializer(generics.CreateAPIView):
     permission_classes = (AllowAny,)
 
 
-class CreateTokenView(TokenObtainPairView):
-    renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
-    serializer_class = MyTokenObtainPairSerializer
-    permission_classes = (AllowAny,)
-
-
 class ManageUserView(generics.RetrieveUpdateAPIView):
     serializer_class = UserSerializer
     authentication_classes = (JWTAuthentication,)
@@ -36,3 +29,4 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+    permission_classes = (AllowAny,)

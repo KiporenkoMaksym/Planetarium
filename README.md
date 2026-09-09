@@ -5,18 +5,12 @@ API service for planetarium management written on DRF
 ## Installation using GitHub
 
 ``` bash
-git clone 
+git clone <repository-url>
 cd Planetarium
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-set DB_HOST=<db>
-set DB_NAME=<planetarium>
-set DB_USER=<postgres>
-set DB_PASSWORD=<postgres>
-set SECRET_KEY=<django-insecure-$%)n4*)n$w$95g7sb-3bi9zhqw2m^ahc)mgex4go9v)1uh_u79>
-python app_service/manage.py migrate
-python app_service/manage.py runserver
+
+cp .env.sample .env
+
+docker compose up --build
 ```
 
 ## Run with docker
